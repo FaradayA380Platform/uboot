@@ -1,0 +1,82 @@
+/*
+ * Copyright (C) 2014 Faraday, Inc. (www.faraday-tech.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+ /dts-v1/;
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+/  {
+	model = "hgu";
+	compatible = "arm,faraday-soc";
+	interrupt-parent = <&gic>;
+    u-boot,dm-pre-reloc;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	aliases {
+		serial0 = &uart0;
+	};
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a9";
+			reg = <0>;
+		};
+	};
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x40000000 0x20000000>;
+	};
+
+	gic: interrupt-controller@96001000 {
+		compatible = "arm,cortex-a9-gic";
+		interrupt-controller;
+		#interrupt-cells = <3>;
+		#address-cells = <1>;
+		reg = <0x96001000 0x1000>,
+			  <0x96000100 0x100>;
+	};		
+	
+	chosen {
+		stdout-path = &uart0;
+	};
+		
+	uart0: uart@90400000 {
+		compatible = "ns16550";
+		clock-frequency = <33000000>;
+		reg = <0x90400000 0x1000>;		
+		reg-offset = <0>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		status = "disabled";				
+		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	sd0: sd@a0600000 {
+		compatible = "faraday,ftsdc021-sdhci";
+		interrupt-parent = <&gic>;
+		reg = <0xa0600000 0x1000>;
+		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+		bus-width = <4>;
+		status = "okay";
+	};
+	
+	usb: usb@a0400000 {
+		compatible =  "fotg210,fotg210_udc";
+		status = "okay";
+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+		reg = <0xa0400000 0x1000>;
+	};	
+	usb2: usb@a0500000 {
+		compatible = "faraday-ehci";
+		reg = <0xa0500000 0x1000>;
+		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+	};	
+ };

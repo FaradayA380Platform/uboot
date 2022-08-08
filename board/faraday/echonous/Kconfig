@@ -1,0 +1,15 @@
+if TARGET_ECHONOUS
+
+config SYS_BOARD
+	default "echonous"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "echonous"
+
+config SYS_CONFIG_NAME
+	default "echonous"
+
+endif

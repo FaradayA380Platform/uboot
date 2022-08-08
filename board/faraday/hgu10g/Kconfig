@@ -1,0 +1,15 @@
+if MACH_HGU10G
+
+config SYS_BOARD
+	default "hgu10g"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "hgu10g"
+
+config SYS_CONFIG_NAME
+	default "hgu10g"
+
+endif

@@ -1,0 +1,15 @@
+if ARCH_A500
+
+config SYS_BOARD
+	default "a500"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "a500"
+
+config SYS_CONFIG_NAME
+	default "a500"
+
+endif

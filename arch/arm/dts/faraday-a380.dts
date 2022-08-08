@@ -1,0 +1,135 @@
+/*
+ * Copyright (C) 2014 Faraday, Inc. (www.faraday-tech.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+ /dts-v1/;
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+/ {
+	model = "a380";
+	compatible = "arm,faraday-soc";
+	u-boot,dm-pre-reloc;
+	interrupt-parent = <&gic>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	aliases {
+		serial0 = &uart0;
+		spi0 = &spi0;
+		i2c0 = &i2c0;
+	};
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		
+		cpu: cpu@0 {
+			compatible = "arm,cortex-a9";
+			device_type = "cpu";
+			reg = <0>;
+			clock-names = "cpu";
+		};
+	};
+	
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x40000000 0x20000000>;
+	};
+	
+	gic: interrupt-controller@f4001000 {
+		compatible = "arm,cortex-a9-gic";
+		interrupt-controller;
+		#interrupt-cells = <3>;
+		#address-cells = <1>;
+		reg = <0xf4001000 0x1000>,
+		      <0xf4000100 0x100>;
+		interrupts = <GIC_PPI 9 0xf04>;
+	};
+	
+	chosen {
+		bootargs = "mem=512M console=ttyS0,38400";
+		stdout-path = "serial0:38400n8";
+		tick-timer = &timer0;
+	};
+	
+	timer0: timer@90b00000 {
+		compatible = "faraday,fttmr010-timer";
+		reg = <0x90b00000 0x1000>;
+		interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	uart0: uart@90400000 {
+		compatible = "of_serial,ns16550_serial", "ns16550";
+		clock-frequency = <18432000>;
+		reg = <0x90400000 0x1000>;
+		reg-offset = <0>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		no-loopback-test;
+		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	usb0: usb@c0800000 {
+		compatible = "faraday-ehci";
+		reg = <0xc0800000 0x1000>;
+		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	usb1: usb@c0900000 {
+		compatible = "faraday-ehci";
+		reg = <0xc0900000 0x1000>;
+		interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	sd0: sd@c0400000 {
+		compatible = "faraday,ftsdc021-sdhci";
+		reg = <0xc0400000 0x1000>;
+		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	nand0: nand@c0600000 {
+		compatible = "ftnandc024";
+		reg = <0xc0600000 0x1000>;
+		data_reg = <0xc0500000 0x1000>;
+		sel_ce = <0>;
+		rac = <3>;
+		cac = <2>;
+		bi_reserve = <1>;
+		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	spi0: spi@0xC0A00000 {
+		compatible = "faraday,ftspi020_spi";
+		reg = <0xC0A00000 0x200>;
+		num-cs = <4>;
+		cs = <0>;
+		max_hz = <20000000>;
+		interrupts = <GIC_SPI 54 IRQ_TYPE_EDGE_RISING>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		spi0_flash0: spi0_flash0@0 {
+			compatible = "m25p80";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			spi-max-frequency = <50000000>;
+			reg = <0>;
+			
+			spi0_flash0@00000000 {
+				label = "spi0_flash0";
+				reg = <0x0 0x100000>;
+			};
+		};
+	};
+	
+	i2c0: i2c@0x90200000 {
+		status = "okay";
+		clock-frequency = <400000>;
+		 compatible = "faraday,fti2c010-i2c";
+		reg = <0x90200000 0x100>;
+		interrupts = <0 56 0>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+};

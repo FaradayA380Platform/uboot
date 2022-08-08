@@ -1,0 +1,46 @@
+if ARCH_A380
+
+config BSP_BOOTIMG_MAGIC_NUMBER
+	hex
+	default "0x11111111"
+	
+config DATAIMG_MAGIC_NUMBER
+	hex
+	default "0x33333333"
+	
+config LOOKUP_TABLE_MAGIC_NUMBER
+	hex
+	default 0x22222222
+	
+config NAND_BSP_LOOKUP_TABLE_BLOCK		
+	hex
+	default 4
+	
+config NAND_BSP_BLOCK
+	hex
+	default 6
+	
+config NAND_BSP_LOOKUP_TABLE_SCAN_NUM
+	hex
+	default 5
+	
+config SPL_BOOTIMG_MAGIC_NUMBER
+	hex 			
+	default 0x41333830
+	
+config SYS_BOARD
+	default "a380"
+
+config BOARD_A380_VP
+	bool "Faraday A380 VP EVB"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "a380"
+
+config SYS_CONFIG_NAME
+	default "a380"
+
+endif

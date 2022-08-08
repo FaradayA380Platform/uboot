@@ -1,0 +1,15 @@
+if TARGET_TS711
+
+config SYS_BOARD
+	default "ts711"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "ts711"
+
+config SYS_CONFIG_NAME
+	default "ts711"
+
+endif

@@ -1,0 +1,15 @@
+if TARGET_VANGO
+
+config SYS_BOARD
+	default "vango"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "vango"
+
+config SYS_CONFIG_NAME
+	default "vango"
+
+endif

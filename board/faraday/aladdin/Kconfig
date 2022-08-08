@@ -1,0 +1,15 @@
+if TARGET_ALADDIN
+
+config SYS_BOARD
+	default "aladdin"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "aladdin"
+
+config SYS_CONFIG_NAME
+	default "aladdin"
+
+endif

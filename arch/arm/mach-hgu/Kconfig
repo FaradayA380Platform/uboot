@@ -1,0 +1,58 @@
+if MACH_HGU
+
+config SPL_FAT_SUPPORT
+	default y
+
+config SPL_LIBCOMMON_SUPPORT
+	default y
+
+config SPL_LIBDISK_SUPPORT
+	default y
+
+config SPL_LIBGENERIC_SUPPORT
+	default y
+
+config SPL_SERIAL_SUPPORT
+	default y
+
+config SYS_BOARD
+	default "hgu"
+
+config BOARD_HGU
+	bool
+	default y
+
+config SYS_VENDOR
+    string "Vendor name"
+    default "faraday"
+
+config SYS_SOC
+    default "hgu"
+
+config SYS_CONFIG_NAME
+	string "Board configuration name"
+	default "farday-common"
+	help
+	This option contains information about board configuration name.
+	Based on this option include/configs/<CONFIG_SYS_CONFIG_NAME>.h header
+	will be used for board configuration.
+
+config SYS_MALLOC_F_LEN
+	default 0x600
+
+config BOOT_INIT_FILE
+	string "boot.bin init register filename"
+	default ""
+	help
+	Add register writes to boot.bin format (max 256 pairs).
+	Expect a table of register-value pairs, e.g. "0x12345678 0x4321"
+
+config SOC_CA9
+	bool
+
+
+config FARADAY
+	bool
+	default y
+
+endif

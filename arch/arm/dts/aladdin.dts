@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2014 Faraday, Inc. (www.faraday-tech.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+ /dts-v1/;
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+/  {
+	model = "aladdin";
+	compatible = "arm,faraday-soc";
+    u-boot,dm-pre-reloc;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	aliases {
+		serial0 = &uart0;
+	};
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a9";
+			reg = <0>;
+		};
+	};
+
+	memory@10000000 {
+		device_type = "memory";
+		reg = <0x10000000 0x20000000>;
+	};
+		
+	
+	chosen {
+		stdout-path = &uart0;
+	};
+		
+	uart0: uart@90020000 {
+		compatible = "arm,pl011";
+		clock = <12000000>;
+		reg = <0x90020000 0x1000>;		
+		reg-offset = <0>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		status = "disabled";				
+		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+	};
+ };

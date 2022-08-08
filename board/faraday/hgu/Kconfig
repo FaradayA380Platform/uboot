@@ -1,0 +1,15 @@
+if TARGET_HGU
+
+config SYS_BOARD
+	default "hgu"
+
+config SYS_VENDOR
+	default "faraday"
+
+config SYS_SOC
+	default "hgu"
+
+config SYS_CONFIG_NAME
+	default "hgu"
+
+endif

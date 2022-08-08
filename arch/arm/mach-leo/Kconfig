@@ -1,0 +1,70 @@
+if ARCH_LEO
+
+config SPL_FAT_SUPPORT
+	default y
+
+config SPL_LIBCOMMON_SUPPORT
+	default y
+
+config SPL_LIBDISK_SUPPORT
+	default y
+
+config SPL_LIBGENERIC_SUPPORT
+	default y
+
+config SPL_SERIAL_SUPPORT
+	default y
+
+config SYS_BOARD
+	default "leo"
+
+config BOARD_LEO
+	bool
+	default y
+
+config SYS_VENDOR
+    string "Vendor name"
+    default "faraday"
+
+config SYS_SOC
+    default "leo"
+
+config SUPPORT_NONSEC
+    bool "Support nonsecure mode"
+    select CPU_V7_HAS_NONSEC
+
+config SMP_PEN_ADDR
+    hex "SMP Pen address"
+    default 0x28008214
+
+config SMP_MAGIC
+    hex "SMP MAGIC number"
+    default 0x07010203 
+
+config DEFAULT_NONSEC
+    bool "Start in Non-secure Mode"
+    default n
+
+config SYS_CONFIG_NAME
+	string "Board configuration name"
+	default "farday-common"
+	help
+	This option contains information about board configuration name.
+	Based on this option include/configs/<CONFIG_SYS_CONFIG_NAME>.h header
+	will be used for board configuration.
+
+config SYS_MALLOC_F_LEN
+	default 0x600
+
+config BOOT_INIT_FILE
+	string "boot.bin init register filename"
+	default ""
+	help
+	Add register writes to boot.bin format (max 256 pairs).
+	Expect a table of register-value pairs, e.g. "0x12345678 0x4321"
+
+config FARADAY
+	bool
+	default y
+
+endif

@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) 2014 Faraday, Inc. (www.faraday-tech.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+ /dts-v1/;
+
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/  {
+	model = "tc12ngrc";
+	compatible = "arm,faraday-soc";
+	u-boot,dm-pre-reloc;
+	interrupt-parent = <&intc>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	aliases {
+		u-boot,dm-pre-reloc;
+		serial0 = &uart0;
+		spi0 = &spi0;
+	};
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+
+	memory@70000000 {
+		device_type = "memory";
+		reg = <0x70000000 0x10000000>;
+	};
+
+	intc: interrupt-controller@ffff0000 {
+		compatible = "faraday,ftintc020";
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		#address-cells = <1>;
+		reg = <0xffff0000 0x1000>;
+	};
+
+	chosen {
+		u-boot,dm-pre-reloc;
+		bootargs = "mem=256M console=ttyS0,115200";
+		stdout-path = "serial0:115200n8";
+		tick-timer = &timer0;
+	};
+	
+	timer0: timer@fff70000 {
+		u-boot,dm-pre-reloc;
+		compatible = "faraday,fttmr010-timer";
+		reg = <0xfff70000 0x1000>;
+		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	uart0: uart@fff8c000 {
+		u-boot,dm-pre-reloc;
+		compatible = "ns16550a";
+		clock-frequency = <36700000>;
+		reg = <0xfff8c000 0x1000>;
+		reg-offset = <0>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		no-loopback-test;
+		interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	spi0: spi@00500000 {
+		u-boot,dm-pre-reloc;
+		compatible = "faraday,ftspi020_spi";
+		reg = <0x00500000 0x200>;
+		num-cs = <4>;
+		cs = <0>;
+		max_hz = <20000000>;
+		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		spi0_flash0: spi0_flash0@0 {
+			compatible = "m25p80";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			spi-max-frequency = <50000000>;
+			reg = <0>;
+		};
+	};
+};

@@ -1,0 +1,117 @@
+/*
+ * Copyright (C) 2014 Faraday, Inc. (www.faraday-tech.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+ /dts-v1/;
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+/  {
+	model = "hgu10g";
+	compatible = "arm,faraday-soc";
+	u-boot,dm-pre-reloc;
+	interrupt-parent = <&gic>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	aliases {
+		serial0 = &uart0;
+	};
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a9";
+			reg = <0>;
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x10000000>;
+	};
+	
+	gic: interrupt-controller@3a001000 {
+		compatible = "arm,cortex-a9-gic";
+		interrupt-controller;
+		#interrupt-cells = <3>;
+		#address-cells = <1>;
+		reg = <0x3a001000 0x1000>,
+		      <0x3a000100 0x100>;
+		interrupts = <GIC_PPI 9 0xf04>;
+	};
+	
+	chosen {
+		bootargs = "mem=256M console=ttyS0,115200";
+		tick-timer = &timer0;
+	};
+	
+	timer0: timer@05f00000 {
+		compatible = "faraday,fttmr010-timer";
+		reg = <0x05f00000 0x1000>;
+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	uart0: uart@04100000 {
+		compatible = "of_serial,ns16550_serial", "ns16550";
+		clock-frequency = <31250000>;
+		reg = <0x04100000 0x1000>;
+		reg-offset = <0>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		no-loopback-test;
+		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	pci0: pci@38200000 {
+		compatible = "faraday,pci_ftpcie_cdng2";
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges = <0x02000000 0x0 0x11000000 0x10000000>;
+		reg = <0x05c00000 0x02000000>,
+		      <0x10000000 0x00001000>,
+		      <0x38200000 0x00001000>,
+		      <0x06000000 0x00001000>,
+		      <0x06100000 0x00001000>,
+		      <0x06400000 0x00001000>,
+		      <0x34600000 0x00040000>;
+	};
+
+	pci1: pci@38300000 {
+		compatible = "faraday,pci_ftpcie_cdng2";
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges = <0x02000000 0x0 0x21000000 0x10000000>;
+		reg = <0x05c00000 0x02000000>,
+		      <0x20000000 0x00001000>,
+		      <0x38300000 0x00001000>,
+		      <0x07000000 0x00001000>,
+		      <0x07100000 0x00001000>,
+		      <0x07400000 0x00001000>,
+		      <0x34700000 0x00040000>;
+	};
+
+	sd0: sd@08100000 {
+		compatible = "faraday,ftsdc021-sdhci";
+		reg = <0x08100000 0x1000>;
+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	usb0: usb@30000000 {
+		compatible = "xhci-plat";
+		reg = <0x30000000 0x10000>;
+		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	usb1: usb@31000000 {
+		compatible = "xhci-plat";
+		reg = <0x31000000 0x10000>;
+		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+	};
+ };

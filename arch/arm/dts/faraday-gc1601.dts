@@ -1,0 +1,108 @@
+/*
+ * Copyright (C) 2014 Faraday, Inc. (www.faraday-tech.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+ /dts-v1/;
+
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/  {
+	model = "gc1601";
+	compatible = "arm,faraday-soc";
+	u-boot,dm-pre-reloc;
+	interrupt-parent = <&intc>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	aliases {
+		u-boot,dm-pre-reloc;
+		serial0 = &uart0;
+		spi0 = &spi0;
+		i2c0 = &i2c0;
+		i2c1 = &i2c1;
+	};
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x40000000 0x10000000>;
+	};
+
+	intc: interrupt-controller@96000000 {
+		compatible = "faraday,ftintc030";
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		#address-cells = <1>;
+		reg = <0x96000000 0x1000>;
+	};
+
+	chosen {
+		u-boot,dm-pre-reloc;
+		bootargs = "mem=256M console=ttyS0,115200";
+		stdout-path = "serial0:115200n8";
+		tick-timer = &timer0;
+	};
+	
+	timer0: timer@90200000 {
+		u-boot,dm-pre-reloc;
+		compatible = "faraday,fttmr010-timer";
+		reg = <0x90200000 0x1000>;
+		interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	uart0: uart@90400000 {
+		u-boot,dm-pre-reloc;
+		compatible = "ns16550a";
+		clock-frequency = <33000000>;
+		reg = <0x90400000 0x1000>;
+		reg-offset = <0>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		no-loopback-test;
+		interrupts = <44 IRQ_TYPE_LEVEL_HIGH>;
+	};
+
+	i2c0: i2c@90600000 {
+		u-boot,dm-pre-reloc;
+		compatible = "faraday,fti2c010-i2c";
+		dev_id = <0>;
+		reg = <0x90600000 0x1000>;
+		clock-frequency = <100000>;
+		status = "okay";
+	};
+	
+	i2c1: i2c@90700000 {
+		u-boot,dm-pre-reloc;
+		compatible = "faraday,fti2c010-i2c";
+		dev_id = <1>;
+		reg = <0x90700000 0x1000>;
+		clock-frequency = <100000>;
+		status = "okay";
+	};
+
+	spi0: spi@a0000000 {
+		u-boot,dm-pre-reloc;
+		compatible = "faraday,ftspi020_spi";
+		reg = <0xa0000000 0x200>;
+		num-cs = <4>;
+		cs = <0>;
+		max_hz = <20000000>;
+		interrupts = <46 IRQ_TYPE_LEVEL_HIGH>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		spi0_flash0: spi0_flash0@0 {
+			compatible = "m25p80";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			spi-max-frequency = <50000000>;
+			reg = <0>;
+		};
+	};
+};

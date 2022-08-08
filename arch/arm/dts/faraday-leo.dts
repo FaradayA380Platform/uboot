@@ -1,0 +1,195 @@
+/*
+ * Copyright (C) 2014 Faraday, Inc. (www.faraday-tech.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+ /dts-v1/;
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+/  {
+	model = "leo";
+	compatible = "arm,faraday-soc";
+	u-boot,dm-pre-reloc;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	
+	aliases {
+		serial0 = &uart0;
+		spi0 = &spi0;
+		i2c0 = &i2c0;
+		i2c1 = &i2c1;
+		i2c2 = &i2c2;
+		i2c3 = &i2c3;
+	};
+	
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a7", "arm,armv7";
+			reg = <0>;
+		};
+		cpu@1 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a7", "arm,armv7";
+			reg = <1>;
+		};
+		cpu@2 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a7", "arm,armv7";
+			reg = <2>;
+		};
+		cpu@3 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a7", "arm,armv7";
+			reg = <3>;
+		};
+	};
+	
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x10000000>;
+	};
+	
+	chosen {
+		bootargs = "mem=256M console=ttyS0,115200";
+		stdout-path = "serial0:115200n8";
+		tick-timer = &timer0;
+	};
+	
+	gic: interrupt-controller@70000000 {
+		compatible = "arm,cortex-a7-gic";
+		interrupt-controller;
+		#interrupt-cells = <3>;
+		reg = <0x70001000 0x1000>,
+		      <0x70002000 0x2000>,
+		      <0x70004000 0x2000>,
+		      <0x70006000 0x2000>;
+	};
+		
+	timer0: timer@55300000 {
+		compatible = "faraday,ftpwmtmr010-timer";
+		interrupt-parent = <&gic>;
+		reg = <0x55300000 0x1000>;
+		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+	};
+	
+	uart0: uart@54e000000 {
+		compatible = "of_serial,ns16550_serial", "ns16550";
+		interrupt-parent = <&gic>;
+		clock-frequency = <58823529>;
+		reg = <0x54e00000 0x1000>;
+		reg-offset = <0>;
+		reg-shift = <2>;
+		reg-io-width = <4>;
+		no-loopback-test;
+	};
+	
+	usb0: usb@10200000 {
+		compatible = "faraday-ehci";
+		interrupt-parent = <&gic>;
+		reg = <0x10200000 0x1000>;
+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+		status = "okay";
+	};
+	
+	usb1: usb@10300000 {
+		compatible = "faraday-ehci";
+		interrupt-parent = <&gic>;
+		reg = <0x10300000 0x1000>;
+		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+		status = "disabled";
+	};
+	
+	sd0: sd@12100000 {
+		compatible = "faraday,ftsdc021-sdhci";
+		interrupt-parent = <&gic>;
+		reg = <0x12100000 0x1000>;
+		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+		bus-width = <4>;
+		status = "okay";
+	};
+	
+	sd1: sd@12200000 {
+		compatible = "faraday,ftsdc021-sdhci";
+		interrupt-parent = <&gic>;
+		reg = <0x12200000 0x1000>;
+		interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+		bus-width = <4>;
+		status = "disabled";
+	};
+	
+	spi0: spi@0x12000000 {
+		compatible = "faraday,ftspi020_spi";
+		interrupt-parent = <&gic>;
+		reg = <0x12000000 0x200>;
+		num-cs = <4>;
+		cs = <0>;
+		max_hz = <20000000>;
+		interrupts = <GIC_SPI 69 IRQ_TYPE_EDGE_RISING>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		
+		spi0_flash0: spi0_flash0@0 {
+			compatible = "en25qh256";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			spi-max-frequency = <50000000>;
+			reg = <0>;
+			
+			spi0_flash0@00000000 {
+			label = "spi0_flash0";
+			reg = <0x0 0x100000>;
+			};
+		};
+		
+		spi-nand@0 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			compatible = "spi-nand";
+			spi-max-frequency = <40000000>;
+			reg = <0>;
+		};
+	};
+	
+	i2c0: i2c@55500000 {
+		compatible = "faraday,fti2c010-i2c";
+		interrupt-parent = <&gic>;
+		dev_id = <0>;
+		reg = <0x55500000 0x1000>;
+		clock-frequency = <400000>;
+		status = "okay";
+	};
+	
+	i2c1: i2c@55600000 {
+		compatible = "faraday,fti2c010-i2c";
+		interrupt-parent = <&gic>;
+		dev_id = <1>;
+		reg = <0x55600000 0x1000>;
+		clock-frequency = <400000>;
+		status = "okay";
+	};
+	
+	i2c2: i2c@55700000 {
+		compatible = "faraday,fti2c010-i2c";
+		interrupt-parent = <&gic>;
+		dev_id = <2>;
+		reg = <0x55700000 0x1000>;
+		clock-frequency = <400000>;
+		status = "okay";
+	};
+	
+	i2c3: i2c@56f00000 {
+		compatible = "faraday,fti2c010-i2c";
+		interrupt-parent = <&gic>;
+		dev_id = <3>;
+		reg = <0x56f00000 0x1000>;
+		clock-frequency = <400000>;
+		status = "okay";
+	};
+};
